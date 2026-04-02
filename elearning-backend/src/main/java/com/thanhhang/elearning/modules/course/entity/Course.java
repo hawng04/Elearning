@@ -1,12 +1,7 @@
 package com.thanhhang.elearning.modules.course.entity;
 
-import jakarta.annotation.Generated;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.thanhhang.elearning.modules.iam.entity.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -31,7 +27,22 @@ public class Course {
 
     private Double price;
 
-    private  String imageUrl;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    
+    @Column(length = 50)
+    private String status; 
+
+
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private User teacher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Section> sections;
 }

@@ -1,4 +1,4 @@
-package com.thanhhang.exception;
+package com.thanhhang.elearning.exception;
 
 public class GlobalExceptionHandler {
     
