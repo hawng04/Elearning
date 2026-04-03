@@ -21,32 +21,71 @@ public class LessonService {
      @Autowired
     private SectionRepository sectionRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public Lesson createLesson(Long sectionId, LessonRequest request) {
-
         Section section = sectionRepository.findById(sectionId)
-                .orElseThrow(() -> new RuntimeException("Section not found"));
+            .orElseThrow(() -> new RuntimeException("Section not found"));
 
-        User currentUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Course course = section.getCourse();
-        if (!currentUser.getRole().equals("ADMIN") && !course.getTeacher().getId().equals(currentUser.getId())) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to create lesson in this course");
         }
 
         Lesson lesson = Lesson.builder()
-                .title(request.getTitle())
-                .videoUrl(request.getVideoUrl())
-                .content(request.getContent())
-                .isFreePreview(request.getIsFreePreview()!= null ? request.getIsFreePreview() : false)
-                .orderIndex(request.getOrderIndex())
-                .section(section)
-                .build();
-            
+            .title(request.getTitle())
+            .content(request.getContent())
+            .orderIndex(Integer.parseInt(request.getOrderIndex()))
+            .section(section)
+            .build();
+
         return lessonRepository.save(lesson);
     }
+
+    public Lesson updateLesson(Long lessonId, LessonRequest request) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to update lesson in this course");
+        }
+
+        lesson.setTitle(request.getTitle());
+        lesson.setContent(request.getContent());
+        lesson.setOrderIndex(Integer.parseInt(request.getOrderIndex()));
+
+        return lessonRepository.save(lesson);
+    }
+
+    public void deleteLesson(Long lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to delete lesson in this course");
+        }
+
+        lessonRepository.delete(lesson);
+    }
+
+    public Lesson getLessonById(Long lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to view lesson in this course");
+        }
+
+        return lesson;
+    }
+
+    
+
+    
     
 }

@@ -3,38 +3,75 @@ package com.thanhhang.elearning.modules.course.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.dto.SectionRequest;
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.entity.Section;
+import com.thanhhang.elearning.modules.course.repository.CourseRepository;
+import com.thanhhang.elearning.modules.course.repository.SectionRepository;
 
 @Service
 public class SectionService {
     @Autowired
-    private CourseService courseService;
-
+    private CourseRepository courseRepository;
     @Autowired
-    private LessonService lessonService;
+     private SectionRepository sectionRepository;
+   
 
-    // public Section createSection(SectionRequest request) {
-    //     Course course = courseService.getCourseById(request.getCourseId());
+    public Section createSection(Long courseId, SectionRequest request) {
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
 
-    //     Long currentUserId = SecurityUtils.getCurrentUserId();
-    //     String userRole = SecurityUtils.getCurrentUserRole();
-    //     if ( && !userRole.equals("ADMIN")) {
-    //         throw new RuntimeException("Bạn không có quyền tạo phần học");
-    //     }
-    //     var course = courseService.getCourseById(courseId);
-    //     if (course == null) {
-    //         throw new RuntimeException("Course not found");
-    //     }
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !course.getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to create section in this course");
+        }
 
-    //     Section section = Section.builder()
-    //         .title(title)
-    //         .course(course)
-    //         .build();
+        Section section = Section.builder()
+            .title(request.getTitle())
+            .orderIndex(Integer.parseInt(request.getOrderIndex()))
+            .course(course)
+            .build();
 
-    //     return courseService.addSectionToCourse(courseId, section);
-    // }
+        return sectionRepository.save(section);
+    }
+
+    public Section updateSection(Long sectionId, SectionRequest request) {
+        Section section = sectionRepository.findById(sectionId)
+            .orElseThrow(() -> new RuntimeException("Section not found"));
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to update section in this course");
+        }
+
+        section.setTitle(request.getTitle());
+        section.setOrderIndex(Integer.parseInt(request.getOrderIndex()));
+
+        return sectionRepository.save(section);
+    }
+
+    public void deleteSection(Long sectionId) {
+        Section section = sectionRepository.findById(sectionId)
+            .orElseThrow(() -> new RuntimeException("Section not found"));
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        String userRole = SecurityUtils.getCurrentUserRole();
+        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized to delete section in this course");
+        }
+
+        sectionRepository.delete(section);
+    }
+
+    public Section getSectionById(Long sectionId) {
+        return sectionRepository.findById(sectionId)
+            .orElseThrow(() -> new RuntimeException("Section not found"));
+    }
+
+
 
     
 }
