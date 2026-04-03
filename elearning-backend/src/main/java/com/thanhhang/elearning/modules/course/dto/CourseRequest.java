@@ -9,4 +9,5 @@ public class CourseRequest {
     private Double price;
     private Long categoryId; 
     private String imageUrl;
+    private Long teacherId;
 }

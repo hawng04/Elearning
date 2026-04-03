@@ -17,4 +17,6 @@ public class RegisterRequest {
 
     @NotBlank(message = "Họ tên không được để trống")
     private String fullName;
+
+    private String role;
 }

@@ -34,9 +34,8 @@ public class Course {
     private String status; 
 
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "teacher_id", nullable = false)
-    private User teacher;
+    @Column(name = "teacher_id", nullable = false)
+    private Long teacherId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

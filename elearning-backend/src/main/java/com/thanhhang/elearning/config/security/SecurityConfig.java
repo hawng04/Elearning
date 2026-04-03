@@ -1,4 +1,4 @@
-package com.thanhhang.elearning.config;
+package com.thanhhang.elearning.config.security;
 
 import java.util.Arrays;
 

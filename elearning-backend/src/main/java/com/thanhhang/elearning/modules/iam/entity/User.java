@@ -34,4 +34,14 @@ public class User {
 
     @Column(nullable = false)
     private String role; // STUDENT, INSTRUCTOR, ADMIN
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Builder.Default 
+    @Column(name = "is_active")
+    private boolean active = true;
 }

@@ -1,4 +1,4 @@
-package com.thanhhang.elearning.config;
+package com.thanhhang.elearning.config.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,13 +27,15 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             if (jwtUtil.validateToken(token)) {
+                Long id = jwtUtil.extractId(token);
                 String email = jwtUtil.extractEmail(token);
                 String role = jwtUtil.extractRole(token);
 
                 List<org.springframework.security.core.GrantedAuthority> authorities = 
                         java.util.Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role));
                         
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                CustomUserDetails userDetails = new CustomUserDetails(id, email, role);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

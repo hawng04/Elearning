@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thanhhang.elearning.config.JwtUtil;
+import com.thanhhang.elearning.config.security.JwtUtil;
 import com.thanhhang.elearning.modules.iam.dto.LoginRequest;
 import com.thanhhang.elearning.modules.iam.dto.RegisterRequest;
 import com.thanhhang.elearning.modules.iam.entity.User;
@@ -67,7 +67,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(request.getEmail(), user.getRole());
+        String token = jwtUtil.generateToken(user.getId() , request.getEmail(), user.getRole());
 
         return ResponseEntity.ok(token);
     }
