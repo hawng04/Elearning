@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thanhhang.elearning.modules.course.dto.SectionRequest;
+import com.thanhhang.elearning.modules.course.dto.request.SectionRequest;
 import com.thanhhang.elearning.modules.course.entity.Section;
 import com.thanhhang.elearning.modules.course.service.SectionService;
 

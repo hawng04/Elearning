@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thanhhang.elearning.common.utils.SecurityUtils;
-import com.thanhhang.elearning.modules.course.dto.CategoryRequest;
+import com.thanhhang.elearning.modules.course.dto.request.CategoryRequest;
 import com.thanhhang.elearning.modules.course.entity.Category;
 import com.thanhhang.elearning.modules.course.repository.CategoryRepository;
 

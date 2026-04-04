@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thanhhang.elearning.common.utils.SecurityUtils;
-import com.thanhhang.elearning.modules.course.dto.SectionRequest;
+import com.thanhhang.elearning.modules.course.dto.request.SectionRequest;
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.entity.Section;
 import com.thanhhang.elearning.modules.course.repository.CourseRepository;

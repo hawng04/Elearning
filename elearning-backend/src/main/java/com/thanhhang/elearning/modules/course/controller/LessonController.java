@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thanhhang.elearning.modules.course.dto.LessonRequest;
+import com.thanhhang.elearning.modules.course.dto.request.LessonRequest;
 import com.thanhhang.elearning.modules.course.service.LessonService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

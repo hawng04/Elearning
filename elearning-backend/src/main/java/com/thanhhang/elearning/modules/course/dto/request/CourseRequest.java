@@ -1,4 +1,4 @@
-package com.thanhhang.elearning.modules.course.dto;
+package com.thanhhang.elearning.modules.course.dto.request;
 
 import lombok.Data;
 
