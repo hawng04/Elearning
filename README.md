@@ -11,20 +11,20 @@ Elearning platform with real-time contextual chat between instructor and student
 
 A comprehensive E-learning platform designed with a **Strict Modular Monolith** architecture. This platform allows instructors to create and manage courses, while students can enroll, learn, and engage in **real-time contextual chat** with their instructors.
 
-## ✨ Key Features
+## Key Features
 
-* **🔐 Identity & Access Management (IAM):** * Robust authentication and authorization using Spring Security and stateless JWT.
+* **Identity & Access Management (IAM):** * Robust authentication and authorization using Spring Security and stateless JWT.
     * Role-based access control (Admin, Teacher, Student).
-* **📚 Course Management:**
+* **Course Management:**
     * Instructors can create courses, sections, and lessons.
     * Strict security gates: Only enrolled students can access course content (videos, documents).
-* **🎓 Enrollment System:**
+* **Enrollment System:**
     * Decoupled enrollment tracking for students.
-* **💬 Real-Time Contextual Chat:**
+* **Real-Time Contextual Chat:**
     * Instant messaging between students and instructors via WebSockets.
     * Context-aware conversations (e.g., questions linked to specific lessons).
 
-## 💻 Tech Stack
+## Tech Stack
 
 **Backend (`/elearning-backend`)**
 * Java / Spring Boot 3
@@ -38,7 +38,7 @@ A comprehensive E-learning platform designed with a **Strict Modular Monolith** 
 * ReactJS 
 * TailwindCSS, Redux
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation & Setup
 
