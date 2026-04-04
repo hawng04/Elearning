@@ -24,13 +24,6 @@ A comprehensive E-learning platform designed with a **Strict Modular Monolith** 
     * Instant messaging between students and instructors via WebSockets.
     * Context-aware conversations (e.g., questions linked to specific lessons).
 
-## 🏗️ Architecture: Strict Modular Monolith
-
-The backend is engineered with a deep focus on **Domain-Driven Design (DDD)** principles and high cohesion/low coupling:
-* **Zero Cross-Module Foreign Keys:** Modules (IAM, Course, Enrollment, Chat) operate independently using ID references rather than direct Entity relationships (`@ManyToOne`), ensuring the system is Microservices-ready.
-* **Agnostic Infrastructure:** Shared security and configuration components (`SecurityUtils`, `JwtFilter`) act as a shared kernel without depending on business domain entities.
-* **Strict DTO Pattern:** Total isolation between Input (`...Request`) and Output (`...Response`) to prevent Mass Assignment vulnerabilities and ensure data integrity.
-
 ## 💻 Tech Stack
 
 **Backend (`/elearning-backend`)**
@@ -42,22 +35,30 @@ The backend is engineered with a deep focus on **Domain-Driven Design (DDD)** pr
 * Lombok, MapStruct
 
 **Frontend (`/elearning-frontend`)**
-* *(Note: Cập nhật công nghệ Frontend của bạn vào đây, ví dụ: ReactJS / VueJS / Angular, TailwindCSS, Redux/Zustand...)*
+* ReactJS 
+* TailwindCSS, Redux
 
-## 📂 Project Structure
+## 🚀 Getting Started
 
-```text
-Elearning/
-├── elearning-backend/       # Spring Boot application
-│   ├── src/main/java/...
-│   │   ├── config/          # Global configs (Security, WebSockets, Mongo)
-│   │   ├── common/          # Shared utilities
-│   │   └── modules/         # Isolated business domains
-│   │       ├── iam/         # User auth & management
-│   │       ├── course/      # Course content (Sections, Lessons)
-│   │       ├── enrollment/  # Student enrollments
-│   │       └── chat/        # Real-time messaging
-│   └── pom.xml
-└── elearning-frontend/      # Frontend application (UI/UX)
-    ├── src/
-    └── package.json
+### Installation & Setup
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/hawng04/Elearning.git
+cd Elearning
+```   
+
+**2. Setup Backend**
+```bash
+cd elearning-backend
+# Cấu hình file application.properties với thông tin Database của bạn
+# Chạy ứng dụng
+mvn spring-boot:run
+```  
+
+**3. Setup Frontend**
+```bash
+cd ../elearning-frontend
+npm install
+npm run dev
+```  
