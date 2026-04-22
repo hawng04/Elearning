@@ -1,5 +1,7 @@
 package com.thanhhang.elearning.modules.iam.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thanhhang.elearning.config.security.JwtUtil;
+import com.thanhhang.elearning.modules.iam.dto.AuthResponse;
 import com.thanhhang.elearning.modules.iam.dto.LoginRequest;
 import com.thanhhang.elearning.modules.iam.dto.RegisterRequest;
 import com.thanhhang.elearning.modules.iam.entity.User;
 import com.thanhhang.elearning.modules.iam.repository.UserRepository;
+import com.thanhhang.elearning.modules.iam.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +36,9 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
@@ -42,34 +49,27 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Lỗi dữ liệu: " + errorMessage);
         }
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.badRequest().body("Lỗi: Email này đã được sử dụng!");
+        try {
+            userService.register(request);
+            return ResponseEntity.ok("Đăng ký tài khoản thành công!");
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        User newUser = User.builder()
-                .email(request.getEmail())
-                .fullName(request.getFullName())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role("STUDENT")
-                .build();
-
-        userRepository.save(newUser);
-        
-        return ResponseEntity.ok("Đăng ký tài khoản thành công!");
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
         
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email hoặc mật khẩu không chính xác!");
         }
-
-        String token = jwtUtil.generateToken(user.getId() , request.getEmail(), user.getRole());
-
-        return ResponseEntity.ok(token);
+        User user = userOptional.get();
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email hoặc mật khẩu không chính xác!");
+        }
+        String jwtToken = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+        return ResponseEntity.ok(AuthResponse.from(jwtToken, user));
     }
     
 

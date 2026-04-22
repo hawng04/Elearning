@@ -2,6 +2,7 @@ package com.thanhhang.elearning.modules.course.service;
 
 import java.security.Security;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.dto.request.CourseRequest;
+import com.thanhhang.elearning.modules.course.dto.response.CourseResponse;
+import com.thanhhang.elearning.modules.course.dto.response.SectionResponse;
 import com.thanhhang.elearning.modules.course.entity.Category;
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.repository.CategoryRepository;
@@ -92,8 +95,28 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseResponse> getAllCourses() {
+        List<Course> courses = courseRepository.findAll();
+        
+        return courses.stream().map(course -> CourseResponse.builder()
+            .id(course.getId())
+            .title(course.getTitle())
+            .description(course.getDescription())
+            .imageUrl(course.getImageUrl())
+            .teacherId(course.getTeacherId())
+            .price(course.getPrice())
+            .status(course.getStatus())
+            .categoryName(course.getCategory().getName())
+            .sections(course.getSections())
+            .build()).collect(Collectors.toList());
+    }
+
+    public long getTotalLessonsInCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
+        return course.getSections().stream()
+            .flatMap(section -> section.getLessons().stream())
+            .count();
     }
     
 }

@@ -33,13 +33,16 @@ public class UserService {
             throw new RuntimeException("Email này đã tồn tại trong hệ thống!");
         }
 
-        String roleUser = request.getRole() != null ? request.getRole().toUpperCase() : "STUDENT";
+        String roleUser = (request.getRole() != null && !request.getRole().trim().isEmpty()) 
+                ? request.getRole().toUpperCase() 
+                : "STUDENT";
 
         User newUser = User.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(roleUser) 
+                .active(true)
                 .build();
 
         return userRepository.save(newUser);
