@@ -1,8 +1,6 @@
 # Elearning
 Elearning platform with real-time contextual chat between instructor and student.
 
-E-Learning Platform with Real-time Contextual Chat
-
 A comprehensive E-learning platform designed with a **Strict Modular Monolith** architecture. This platform allows instructors to create and manage courses, while students can enroll, learn, and engage in **real-time contextual chat** with their instructors.
 
 ## Key Features
