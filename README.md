@@ -1,13 +1,7 @@
 # Elearning
 Elearning platform with real-time contextual chat between instructor and student.
 
-# 🎓 E-Learning Platform with Real-time Contextual Chat
-
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
-![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+E-Learning Platform with Real-time Contextual Chat
 
 A comprehensive E-learning platform designed with a **Strict Modular Monolith** architecture. This platform allows instructors to create and manage courses, while students can enroll, learn, and engage in **real-time contextual chat** with their instructors.
 
