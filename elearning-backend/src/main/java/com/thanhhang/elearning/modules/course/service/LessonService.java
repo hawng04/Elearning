@@ -1,15 +1,20 @@
 package com.thanhhang.elearning.modules.course.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.dto.request.LessonRequest;
+import com.thanhhang.elearning.modules.course.dto.response.YoutubeVideoInfoResponse;
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.entity.Lesson;
 import com.thanhhang.elearning.modules.course.entity.Section;
+import com.thanhhang.elearning.modules.course.entity.UserLessonProgress;
 import com.thanhhang.elearning.modules.course.repository.LessonRepository;
 import com.thanhhang.elearning.modules.course.repository.SectionRepository;
+import com.thanhhang.elearning.modules.course.repository.UserLessonProgressRepository;
 import com.thanhhang.elearning.modules.iam.entity.User;
 import com.thanhhang.elearning.modules.iam.repository.UserRepository;
 
@@ -21,6 +26,12 @@ public class LessonService {
      @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private YouTubeService youtubeService;
+
+    @Autowired
+    private UserLessonProgressRepository progressRepository;
+
     public Lesson createLesson(Long sectionId, LessonRequest request) {
         Section section = sectionRepository.findById(sectionId)
             .orElseThrow(() -> new RuntimeException("Section not found"));
@@ -31,14 +42,25 @@ public class LessonService {
             throw new RuntimeException("Unauthorized to create lesson in this course");
         }
 
-        Lesson lesson = Lesson.builder()
+        Integer orderIndex = request.getOrderIndex() != null ? Integer.valueOf(request.getOrderIndex()) : 0;
+        Boolean isFreePreview = request.getIsFreePreview() != null ? request.getIsFreePreview() : false;
+
+        Lesson.LessonBuilder lessonBuilder = Lesson.builder()
             .title(request.getTitle())
             .content(request.getContent())
-            .orderIndex(Integer.parseInt(request.getOrderIndex()))
-            .section(section)
-            .build();
+            .orderIndex(orderIndex)
+            .isFreePreview(isFreePreview)
+            .section(section);
 
-        return lessonRepository.save(lesson);
+            if (request.getVideoUrl() != null && !request.getVideoUrl().trim().isEmpty()) {
+                YoutubeVideoInfoResponse ytInfo = youtubeService.getVideoInfo(request.getVideoUrl());
+                lessonBuilder.youtubeVideoId(ytInfo.getYoutubeVideoId())
+                             .videoUrl(request.getVideoUrl())
+                             .thumbnailUrl(ytInfo.getThumbnailUrl())
+                             .duration(ytInfo.getDuration());
+            }
+
+        return lessonRepository.save(lessonBuilder.build());
     }
 
     public Lesson updateLesson(Long lessonId, LessonRequest request) {
@@ -53,7 +75,25 @@ public class LessonService {
 
         lesson.setTitle(request.getTitle());
         lesson.setContent(request.getContent());
-        lesson.setOrderIndex(Integer.parseInt(request.getOrderIndex()));
+        
+        if (request.getOrderIndex() != null) {
+            lesson.setOrderIndex(Integer.valueOf(request.getOrderIndex()));
+        }
+        if (request.getIsFreePreview() != null) {
+            lesson.setIsFreePreview(request.getIsFreePreview());
+        }
+
+        // Tích hợp YouTube API cho luồng Update
+        // Chỉ gọi lại API nếu videoUrl được cập nhật bằng một link mới
+        if (request.getVideoUrl() != null && !request.getVideoUrl().trim().isEmpty() 
+            && !request.getVideoUrl().equals(lesson.getVideoUrl())) {
+            
+            YoutubeVideoInfoResponse ytInfo = youtubeService.getVideoInfo(request.getVideoUrl());
+            lesson.setYoutubeVideoId(ytInfo.getYoutubeVideoId());
+            lesson.setVideoUrl(request.getVideoUrl());
+            lesson.setThumbnailUrl(ytInfo.getThumbnailUrl());
+            lesson.setDuration(ytInfo.getDuration());
+        }
 
         return lessonRepository.save(lesson);
     }
@@ -84,7 +124,25 @@ public class LessonService {
         return lesson;
     }
 
+    public void markLessonAsCompleted(Long lessonId) {
+    Long currentUserId = SecurityUtils.getCurrentUserId();
     
+    Lesson lesson = lessonRepository.findById(lessonId)
+        .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+    boolean alreadyCompleted = progressRepository.existsByUserIdAndLessonId(currentUserId, lessonId);
+    
+    if (!alreadyCompleted) {
+        UserLessonProgress progress = UserLessonProgress.builder()
+            .userId(currentUserId)
+            .lesson(lesson)
+            .isCompleted(true)
+            .completedAt(LocalDateTime.now())
+            .build();
+        
+        progressRepository.save(progress);
+    }
+}
 
     
     

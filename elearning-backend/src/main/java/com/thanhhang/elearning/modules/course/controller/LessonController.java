@@ -26,8 +26,8 @@ public class LessonController {
 
 
     @PreAuthorize("hasRole('ADMIN','TEACHER')")
-    @PostMapping("")
-    public ResponseEntity<?> createLesson(Long sectionId, @RequestBody LessonRequest request) {
+    @PostMapping("/sections/{sectionId}")
+    public ResponseEntity<?> createLesson(@PathVariable Long sectionId, @RequestBody LessonRequest request) {
         try
         {
             return ResponseEntity.ok(lessonService.createLesson(sectionId, request));
@@ -79,6 +79,17 @@ public class LessonController {
             return ResponseEntity.status(500).body("Lỗi khi lấy thông tin bài học: " + e.getMessage());
         }
         
+    }
+
+    @PreAuthorize("hasAnyRole('STUDENT')") 
+    @PostMapping("/{id}/complete")
+    public ResponseEntity<?> completeLesson(@PathVariable Long id) {
+        try {
+            lessonService.markLessonAsCompleted(id);
+            return ResponseEntity.ok("Đã đánh dấu hoàn thành bài học");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
+        }
     }
      
     

@@ -18,7 +18,7 @@ public class CourseResponse {
     private Double price;
     private String status;
     private String categoryName;
-    private List<Section> sections;
+    private List<SectionResponse> sections;
     
     private Double rating;
     private Integer totalRatings;

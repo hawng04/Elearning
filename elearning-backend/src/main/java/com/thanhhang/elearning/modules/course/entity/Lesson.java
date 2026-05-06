@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "lessons")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Lesson {
 
     @Id
@@ -20,26 +20,31 @@ public class Lesson {
     private Long id;
 
     @Column(nullable = false)
-    private String title; 
+    private String title;
+
+    @Column(name = "youtube_video_id", unique = true)  // Rất quan trọng
+    private String youtubeVideoId;
 
     @Column(name = "video_url")
-    private String videoUrl; 
+    private String videoUrl;           // full URL hoặc embed URL
+
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;       // Thêm cái này
 
     @Column(columnDefinition = "TEXT")
-    private String content; 
+    private String content;
+
+    @Column(name = "duration")         // Giữ nguyên String (PT3M45S) hoặc đổi thành Integer (giây)
+    private String duration;           // Hoặc Integer durationInSeconds;
 
     @Column(name = "is_free_preview")
-    private Boolean isFreePreview;
+    private Boolean isFreePreview = false;
 
     @Column(name = "order_index")
-    private Integer orderIndex; 
-
+    private Integer orderIndex;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", nullable = false)
     @JsonIgnore
     private Section section;
-    
-    @Column(name = "duration")
-    private String duration;
 }

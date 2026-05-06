@@ -6,7 +6,7 @@ import lombok.Data;
 public class LessonRequest {
     private String title;
     private String content;
-    private String orderIndex;
+    private Integer orderIndex;
     private Boolean isFreePreview;
     private String videoUrl;
 }

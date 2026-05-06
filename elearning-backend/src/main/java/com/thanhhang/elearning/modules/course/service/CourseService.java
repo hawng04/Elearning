@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.dto.request.CourseRequest;
 import com.thanhhang.elearning.modules.course.dto.response.CourseResponse;
+import com.thanhhang.elearning.modules.course.dto.response.LessonResponse;
 import com.thanhhang.elearning.modules.course.dto.response.SectionResponse;
 import com.thanhhang.elearning.modules.course.entity.Category;
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.repository.CategoryRepository;
 import com.thanhhang.elearning.modules.course.repository.CourseRepository;
+import com.thanhhang.elearning.modules.enrollment.repository.EnrollmentRepository;
 
 @Service
 public class CourseService {
@@ -26,8 +28,11 @@ public class CourseService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Course createCourse(CourseRequest request) {
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
+    public Course createCourse(CourseRequest request) {
+        
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
 
@@ -81,6 +86,61 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new RuntimeException("Course not found"));
         
+        Long currentUserId = null;
+        String userRole = "GUEST";
+        boolean isEnrolled = false;
+
+        try {
+            currentUserId = SecurityUtils.getCurrentUserId();
+            userRole = SecurityUtils.getCurrentUserRole();
+        } catch (Exception e) {
+            // Không làm gì cả, user chưa đăng nhập (GUEST)
+        }
+
+        if (currentUserId != null) {
+            isEnrolled = enrollmentRepository.existsByCourseIdAndStudentId(courseId, currentUserId);
+        }
+
+        boolean hasFullAccess = (currentUserId != null && currentUserId.equals(course.getTeacherId())) 
+                                || "ADMIN".equals(userRole) 
+                                || isEnrolled;
+
+
+        List<SectionResponse> sectionResponses = course.getSections().stream().map(section -> {
+            
+            List<LessonResponse> lessonResponses = section.getLessons().stream().map(lesson -> {
+                
+                String videoIdToReturn = lesson.getYoutubeVideoId();
+                String videoUrlToReturn = lesson.getVideoUrl();
+                
+                if (!hasFullAccess && (lesson.getIsFreePreview() == null || !lesson.getIsFreePreview())) {
+                    videoIdToReturn = null; 
+                    videoUrlToReturn = null;
+                }
+
+                return LessonResponse.builder()
+                        .id(lesson.getId())
+                        .title(lesson.getTitle())
+                        .youtubeVideoId(videoIdToReturn) 
+                        .videoUrl(videoUrlToReturn)     
+                        .thumbnailUrl(lesson.getThumbnailUrl())
+                        .content(lesson.getContent())
+                        .duration(lesson.getDuration())
+                        .isFreePreview(lesson.getIsFreePreview())
+                        .orderIndex(lesson.getOrderIndex())
+                        .sectionId(section.getId())
+                        .build();
+            }).collect(Collectors.toList());
+
+            return SectionResponse.builder()
+                    .id(section.getId())
+                    .title(section.getTitle())
+                    .orderIndex(section.getOrderIndex())
+                    .lessons(lessonResponses) 
+                    .build();
+                    
+        }).collect(Collectors.toList());
+
         return CourseResponse.builder()
             .id(course.getId())
             .title(course.getTitle())
@@ -90,17 +150,17 @@ public class CourseService {
             .price(course.getPrice())
             .status(course.getStatus())
             .categoryName(course.getCategory().getName())
-            .sections(course.getSections())
+            .sections(sectionResponses) // <--- Thay vì course.getSections(), ta trả về DTO an toàn
             .rating(course.getAverageRating() != null ? course.getAverageRating() : 0.0)
             .totalRatings(course.getTotalRatings() != null ? course.getTotalRatings() : 0)
             .totalStudents(course.getTotalStudents() != null ? course.getTotalStudents() : 0)
             .language(course.getLanguage() != null ? course.getLanguage() : "Tiếng Việt")
             .lastUpdated(course.getLastUpdated() != null ? course.getLastUpdated() : "3/2026")
-            
             .benefits(course.getBenefits() != null ? course.getBenefits() : new ArrayList<>())
             .requirements(course.getRequirements() != null ? course.getRequirements() : new ArrayList<>())
             .includes(course.getIncludes() != null ? course.getIncludes() : new ArrayList<>())
             .build();
+    
         
     }
 
@@ -130,7 +190,14 @@ public class CourseService {
             .price(course.getPrice())
             .status(course.getStatus())
             .categoryName(course.getCategory().getName())
-            .sections(course.getSections())
+            .rating(course.getAverageRating() != null ? course.getAverageRating() : 0.0)
+            .totalRatings(course.getTotalRatings() != null ? course.getTotalRatings() : 0)
+            .totalStudents(course.getTotalStudents() != null ? course.getTotalStudents() : 0)
+            .language(course.getLanguage() != null ? course.getLanguage() : "Tiếng Việt")
+            .lastUpdated(course.getLastUpdated() != null ? course.getLastUpdated() : "3/2026")
+            .benefits(course.getBenefits() != null ? course.getBenefits() : new ArrayList<>())
+            .requirements(course.getRequirements() != null ? course.getRequirements() : new ArrayList<>())
+            .includes(course.getIncludes() != null ? course.getIncludes() : new ArrayList<>())
             .build()).collect(Collectors.toList());
     }
 
