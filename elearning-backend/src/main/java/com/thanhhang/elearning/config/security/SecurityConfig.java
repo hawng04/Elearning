@@ -43,7 +43,12 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**", "/api/courses/**").permitAll()
+                .requestMatchers(
+                    "/api/auth/**", 
+                    "/api/courses", "/api/courses/**", 
+                    "/api/categories", "/api/categories/**",
+                    "/error","/api/admin/youtube/info"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,6 +1,7 @@
 package com.thanhhang.elearning.modules.course.service;
 
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,9 +77,31 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public Course getCourseById(Long courseId) {
-        return courseRepository.findById(courseId)
+    public CourseResponse getCourseById(Long courseId) {
+        Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new RuntimeException("Course not found"));
+        
+        return CourseResponse.builder()
+            .id(course.getId())
+            .title(course.getTitle())
+            .description(course.getDescription())
+            .imageUrl(course.getImageUrl())
+            .teacherId(course.getTeacherId())
+            .price(course.getPrice())
+            .status(course.getStatus())
+            .categoryName(course.getCategory().getName())
+            .sections(course.getSections())
+            .rating(course.getAverageRating() != null ? course.getAverageRating() : 0.0)
+            .totalRatings(course.getTotalRatings() != null ? course.getTotalRatings() : 0)
+            .totalStudents(course.getTotalStudents() != null ? course.getTotalStudents() : 0)
+            .language(course.getLanguage() != null ? course.getLanguage() : "Tiếng Việt")
+            .lastUpdated(course.getLastUpdated() != null ? course.getLastUpdated() : "3/2026")
+            
+            .benefits(course.getBenefits() != null ? course.getBenefits() : new ArrayList<>())
+            .requirements(course.getRequirements() != null ? course.getRequirements() : new ArrayList<>())
+            .includes(course.getIncludes() != null ? course.getIncludes() : new ArrayList<>())
+            .build();
+        
     }
 
     public void deleteCourse(Long courseId) {

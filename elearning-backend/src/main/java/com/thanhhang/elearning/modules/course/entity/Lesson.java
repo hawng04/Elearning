@@ -40,4 +40,6 @@ public class Lesson {
     @JsonIgnore
     private Section section;
     
+    @Column(name = "duration")
+    private String duration;
 }

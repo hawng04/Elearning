@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thanhhang.elearning.modules.enrollment.entity.Enrollment;
 import com.thanhhang.elearning.modules.enrollment.service.EnrollmentService;
+import com.thanhhang.elearning.modules.payment.dto.PaymentRequest;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,16 +22,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/enrollments")
+@CrossOrigin(origins = "*")
 public class EnrollmentController {
 
     @Autowired
     private EnrollmentService enrollmentService;
 
+    
+
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{courseId}")
-    public Enrollment enroll(@PathVariable Long courseId) {
+    public Enrollment enroll(
+            @PathVariable Long courseId,
+            @RequestBody(required = false) PaymentRequest paymentRequest 
+    ) {
         try {
-            return enrollmentService.enroll(courseId);
+            // Truyền cả 2 thứ sang cho Service xử lý
+            return enrollmentService.enroll(courseId, paymentRequest); 
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi đăng ký khóa học: " + e.getMessage());
         }

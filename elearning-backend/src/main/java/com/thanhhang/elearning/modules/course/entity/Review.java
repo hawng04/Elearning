@@ -1,9 +1,8 @@
-package com.thanhhang.elearning.modules.enrollment.entity;
+package com.thanhhang.elearning.modules.course.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.thanhhang.elearning.modules.course.entity.Course;
+import com.thanhhang.elearning.modules.iam.entity.User;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
@@ -14,39 +13,43 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "reviews")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Enrollment {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "course_id")
-    private Long courseId;
+    @Column(nullable = false)
+    private Integer rating; 
 
-    @Column(nullable = false, name = "student_id")
-    private Long studentId;
+    @Column(columnDefinition = "TEXT")
+    private String comment; 
 
-    @Column(name = "enrollment_date")
-    private LocalDateTime enrollmentDate;
+    private LocalDateTime createdAt;
 
-    @Column(nullable = false, name = "status")
-    private String status; //  ENROLLED, COMPLETED, DROPPED
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
     private Course course;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-
-    
 }

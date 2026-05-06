@@ -1,3 +1,5 @@
+import { Section } from "./section";
+
 export interface Course {
     id: number;
     title: string;
@@ -7,4 +9,14 @@ export interface Course {
     status: string;
     teacherId: number;
     categoryName: string;
+    sections?: Section[];
+
+    rating?: number;
+    totalRatings?: number;
+    totalStudents?: number;
+    language?: string;
+    lastUpdated?: string;
+    benefits?: string[];
+    requirements?: string[];
+    includes?: string[];
   }

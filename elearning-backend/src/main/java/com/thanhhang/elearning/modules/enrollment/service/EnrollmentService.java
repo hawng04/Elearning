@@ -11,6 +11,8 @@ import com.thanhhang.elearning.modules.enrollment.entity.Enrollment;
 import com.thanhhang.elearning.modules.enrollment.entity.LessonProgress;
 import com.thanhhang.elearning.modules.enrollment.repository.EnrollmentRepository;
 import com.thanhhang.elearning.modules.enrollment.repository.LessonProgressRepository;
+import com.thanhhang.elearning.modules.payment.dto.PaymentRequest;
+import com.thanhhang.elearning.modules.payment.service.PaymentService;
 
 @Service
 public class EnrollmentService {
@@ -18,8 +20,9 @@ public class EnrollmentService {
     private EnrollmentRepository enrollmentRepository;
     @Autowired private LessonProgressRepository lessonProgressRepository;
     @Autowired private CourseService courseService;
+    @Autowired private PaymentService paymentService;
 
-    public Enrollment enroll(Long courseId)
+    public Enrollment enroll(Long courseId, PaymentRequest paymentRequest)
     {
         Long studentId = SecurityUtils.getCurrentUserId();
         if (enrollmentRepository.existsByCourseIdAndStudentId(courseId, studentId)) {
@@ -33,8 +36,12 @@ public class EnrollmentService {
                 .status("ENROLLED")
                 .build();
 
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
 
-        return enrollmentRepository.save(enrollment);
+        paymentService.savePayment(courseId, studentId, paymentRequest);
+
+
+        return savedEnrollment;
     }
 
     public List<Enrollment> getMyEnrollments() {

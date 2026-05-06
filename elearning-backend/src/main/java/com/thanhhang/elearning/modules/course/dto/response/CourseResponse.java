@@ -20,4 +20,12 @@ public class CourseResponse {
     private String categoryName;
     private List<Section> sections;
     
+    private Double rating;
+    private Integer totalRatings;
+    private Integer totalStudents;
+    private String language;
+    private String lastUpdated;
+    private List<String> benefits;     
+    private List<String> requirements; 
+    private List<String> includes;
 }

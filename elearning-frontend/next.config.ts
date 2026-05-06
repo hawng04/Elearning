@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'img-b.udemycdn.com', // Cho phép ảnh khóa học của Udemy
+        hostname: 'img-b.udemycdn.com',
       },
       {
         protocol: 'https',
