@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.service.CourseService;
+import com.thanhhang.elearning.modules.enrollment.dto.EnrollmentResponseDTO;
 import com.thanhhang.elearning.modules.enrollment.entity.Enrollment;
 import com.thanhhang.elearning.modules.enrollment.entity.LessonProgress;
 import com.thanhhang.elearning.modules.enrollment.repository.EnrollmentRepository;
@@ -44,9 +45,31 @@ public class EnrollmentService {
         return savedEnrollment;
     }
 
-    public List<Enrollment> getMyEnrollments() {
+    public List<EnrollmentResponseDTO> getMyEnrollments() {
         Long studentId = SecurityUtils.getCurrentUserId();
-        return enrollmentRepository.findAllByStudentId(studentId);
+        List<Enrollment> enrollments = enrollmentRepository.findAllByStudentId(studentId);
+        
+        return enrollments.stream().map(enrollment -> {
+            
+            Long totalLessons = courseService.getTotalLessonsInCourse(enrollment.getCourseId());
+            
+            Long completedLessons = lessonProgressRepository.countByEnrollmentIdAndIsCompletedTrue(enrollment.getId());
+            
+            int progressPercentage = 0;
+            if (totalLessons != null && totalLessons > 0) {
+                progressPercentage = (int) Math.round((double) completedLessons / totalLessons * 100);
+            }
+            
+            return com.thanhhang.elearning.modules.enrollment.dto.EnrollmentResponseDTO.builder()
+                    .id(enrollment.getId())
+                    .courseId(enrollment.getCourseId())
+                    .enrollmentDate(enrollment.getEnrollmentDate())
+                    .status(enrollment.getStatus())
+                    .course(enrollment.getCourse()) 
+                    .progress(progressPercentage)   
+                    .build();
+                    
+        }).toList(); 
     }
 
     public String markLessonAsCompleted(Long courseId, Long lessonId) {

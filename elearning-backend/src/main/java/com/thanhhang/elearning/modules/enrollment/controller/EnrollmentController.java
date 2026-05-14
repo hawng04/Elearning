@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thanhhang.elearning.modules.enrollment.dto.EnrollmentResponseDTO;
 import com.thanhhang.elearning.modules.enrollment.entity.Enrollment;
 import com.thanhhang.elearning.modules.enrollment.service.EnrollmentService;
 import com.thanhhang.elearning.modules.payment.dto.PaymentRequest;
@@ -17,8 +18,6 @@ import com.thanhhang.elearning.modules.payment.dto.PaymentRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/enrollments")
@@ -44,14 +43,11 @@ public class EnrollmentController {
         }
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/my-courses")
-    public List<Enrollment> getMyEnrollments() {
-        try {
-            return enrollmentService.getMyEnrollments();
-        } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy danh sách đăng ký: " + e.getMessage());
-        }
+    public ResponseEntity<List<EnrollmentResponseDTO>> getMyEnrollments() {
+        List<EnrollmentResponseDTO> enrollments = enrollmentService.getMyEnrollments();
+        return ResponseEntity.ok(enrollments);
     }
 
     @PreAuthorize("hasRole('STUDENT')")

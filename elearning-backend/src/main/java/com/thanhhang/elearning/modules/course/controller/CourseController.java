@@ -1,6 +1,8 @@
 package com.thanhhang.elearning.modules.course.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thanhhang.elearning.modules.course.dto.request.CourseRequest;
 import com.thanhhang.elearning.modules.course.service.CategoryService;
 import com.thanhhang.elearning.modules.course.service.CourseService;
+import com.thanhhang.elearning.modules.course.service.LessonService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,9 @@ public class CourseController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private LessonService lessonService;
     
 
     @GetMapping
@@ -98,4 +104,11 @@ public class CourseController {
             return ResponseEntity.status(500).body("Lỗi khi xóa khóa học: " + e.getMessage());
         }
     }
+
+    // @PreAuthorize("isAuthenticated()")
+    // @GetMapping("/{courseId}/completed-lessons")
+    // public ResponseEntity<List<Long>> getCompletedLessons(@PathVariable Long courseId) {
+    //     List<Long> completedLessonIds = lessonService.getCompletedLessonIds(courseId);
+    //     return ResponseEntity.ok(completedLessonIds);
+    // }
 }

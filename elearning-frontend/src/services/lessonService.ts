@@ -18,5 +18,9 @@ export const lessonService = {
     return response.data;
   },
 
+  getCompletedLessons: async (courseId: number) => {
+    const response = await axiosClient.get(`/progress/courses/${courseId}/completed-lessons`);
+    return response.data; 
+  },
   
 };

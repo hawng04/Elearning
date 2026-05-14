@@ -1,5 +1,7 @@
 package com.thanhhang.elearning.modules.course.controller;
 
+import java.util.List;
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,17 +83,18 @@ public class LessonController {
         
     }
 
-    @PreAuthorize("hasAnyRole('STUDENT')") 
-    @PostMapping("/{id}/complete")
-    public ResponseEntity<?> completeLesson(@PathVariable Long id) {
-        try {
-            lessonService.markLessonAsCompleted(id);
-            return ResponseEntity.ok("Đã đánh dấu hoàn thành bài học");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
-        }
-    }
-     
+    // @PreAuthorize("hasAnyRole('STUDENT')") 
+    // @PostMapping("/{id}/complete")
+    // public ResponseEntity<?> completeLesson(@PathVariable Long id) {
+    //     try {
+    //         lessonService.markLessonAsCompleted(id);
+    //         return ResponseEntity.ok("Đã đánh dấu hoàn thành bài học");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
+    //     }
+    // }
+
+   
     
     
 }

@@ -87,7 +87,6 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Header />
 
       <main className="flex-grow flex bg-white">
         

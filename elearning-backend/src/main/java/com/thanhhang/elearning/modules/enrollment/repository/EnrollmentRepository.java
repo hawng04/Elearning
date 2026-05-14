@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.thanhhang.elearning.modules.enrollment.entity.Enrollment;
@@ -13,4 +15,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
      boolean existsByCourseIdAndStudentId(Long courseId, Long studentId);
      List<Enrollment> findAllByStudentId(Long studentId);
     Optional<Enrollment> findByCourseIdAndStudentId(Long courseId, Long studentId);
+    @Query("SELECT e FROM Enrollment e WHERE e.studentId = :userId AND e.courseId = :courseId")
+    Optional<Enrollment> findByUserIdAndCourseId(@Param("userId") Long userId, @Param("courseId") Long courseId);
 }

@@ -31,7 +31,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("*")); 
+        
+        configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // Áp dụng cho toàn bộ API
@@ -47,7 +49,9 @@ public class SecurityConfig {
                     "/api/auth/**", 
                     "/api/courses", "/api/courses/**", 
                     "/api/categories", "/api/categories/**",
-                    "/error","/api/admin/youtube/info"
+                    "/error","/api/admin/youtube/info",
+                    "/ws/**",       
+                    "/api/chat/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

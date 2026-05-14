@@ -10,10 +10,11 @@ export default function Header() {
     <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-6 shadow-sm">
       <Link href="/" className="flex-shrink-0">
         <Image
-            src="/images/logo.png" 
+            src="/images/logo-udemy.svg" 
             alt="Udemy Logo"
-            width={120}
-            height={100}
+            width={80}
+            height={40}
+            priority
         />
       </Link>
 
@@ -33,15 +34,15 @@ export default function Header() {
 
       <div className="flex items-center gap-3 text-sm flex-shrink-0 ml-auto">
         <Link href="#" className="text-gray-700 hover:text-blue-600 hidden md:flex transition-colors">Udemy Business</Link>
-        <button className="text-gray-900 hover:text-blue-600 transition-colors">
+        {/* <button className="text-gray-900 hover:text-blue-600 transition-colors">
           <ShoppingCart className="h-5 w-5" />
-        </button>
+        </button> */}
 
         {/* LOGIC HIỂN THỊ ĐỘNG */}
         {isAuthenticated ? (
           // NẾU ĐÃ ĐĂNG NHẬP: Hiện Avatar và Dropdown/Logout
           <div className="flex items-center gap-4 ml-2">
-            <Link href="/dashboard" className="font-semibold text-gray-700 hover:text-purple-600">
+            <Link href="/my-courses" className="font-semibold text-gray-700 hover:text-purple-600">
               Học tập của tôi
             </Link>
             <div className="h-10 w-10 rounded-full bg-purple-900 text-white flex items-center justify-center font-bold">

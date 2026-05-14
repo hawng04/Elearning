@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
-import axiosClient from '@/lib/axiosClient';
 import { Course } from '@/types/course';
 import { courseService } from '@/services/courseService';
 import { categoryService } from '@/services/categoryService';
@@ -40,15 +39,14 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans text-gray-900">
-      <Header />
 
       {/* Dùng flex-grow để đẩy Footer xuống tận cùng dưới đáy màn hình */}
       <main className="flex-grow">
         
         {/* 1. HERO BANNER */}
-        <div className="relative w-full h-[400px] bg-gray-100 overflow-hidden">
+        <div className="relative items-center max-w-7xl h-[400px] mx-auto bg-gray-100 overflow-hidden">
           <Image 
-            src="/images/learning-management-system.webp" 
+            src="/images/banner.jpg" 
             alt="Hero Banner" 
             fill
             className="object-cover object-right md:object-center opacity-20 md:opacity-100"

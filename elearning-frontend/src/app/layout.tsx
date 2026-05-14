@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import MainLayoutWrapper from "@/components/MainLayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,11 @@ export default function RootLayout({
     >
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col`} suppressHydrationWarning>
         
-        <div className="flex-grow">
-          {children}
-        </div>
+        
 
-        <Footer />
+        <MainLayoutWrapper>
+          {children}
+        </MainLayoutWrapper>
         
       </body>
     </html>

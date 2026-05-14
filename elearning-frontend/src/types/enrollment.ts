@@ -5,4 +5,5 @@ export interface Enrollment {
   enrollmentDate: string; 
   status: string;
   course: Course; 
+  progress?: number;
 }

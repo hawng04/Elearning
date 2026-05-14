@@ -11,10 +11,10 @@ import com.thanhhang.elearning.modules.course.dto.response.YoutubeVideoInfoRespo
 import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.entity.Lesson;
 import com.thanhhang.elearning.modules.course.entity.Section;
-import com.thanhhang.elearning.modules.course.entity.UserLessonProgress;
 import com.thanhhang.elearning.modules.course.repository.LessonRepository;
 import com.thanhhang.elearning.modules.course.repository.SectionRepository;
-import com.thanhhang.elearning.modules.course.repository.UserLessonProgressRepository;
+import com.thanhhang.elearning.modules.enrollment.entity.LessonProgress;
+import com.thanhhang.elearning.modules.enrollment.repository.LessonProgressRepository;
 import com.thanhhang.elearning.modules.iam.entity.User;
 import com.thanhhang.elearning.modules.iam.repository.UserRepository;
 
@@ -28,9 +28,8 @@ public class LessonService {
 
     @Autowired
     private YouTubeService youtubeService;
-
     @Autowired
-    private UserLessonProgressRepository progressRepository;
+    private LessonProgressRepository progressRepository;
 
     public Lesson createLesson(Long sectionId, LessonRequest request) {
         Section section = sectionRepository.findById(sectionId)
@@ -124,25 +123,27 @@ public class LessonService {
         return lesson;
     }
 
-    public void markLessonAsCompleted(Long lessonId) {
-    Long currentUserId = SecurityUtils.getCurrentUserId();
-    
-    Lesson lesson = lessonRepository.findById(lessonId)
-        .orElseThrow(() -> new RuntimeException("Lesson not found"));
-
-    boolean alreadyCompleted = progressRepository.existsByUserIdAndLessonId(currentUserId, lessonId);
-    
-    if (!alreadyCompleted) {
-        UserLessonProgress progress = UserLessonProgress.builder()
-            .userId(currentUserId)
-            .lesson(lesson)
-            .isCompleted(true)
-            .completedAt(LocalDateTime.now())
-            .build();
+    // public void markLessonAsCompleted(Long lessonId) {
+    //     Long currentUserId = SecurityUtils.getCurrentUserId();
         
-        progressRepository.save(progress);
-    }
-}
+    //     Lesson lesson = lessonRepository.findById(lessonId)
+    //         .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+    //     boolean alreadyCompleted = progressRepository.existsByUserIdAndLessonId(currentUserId, lessonId);
+        
+    //     if (!alreadyCompleted) {
+    //         LessonProgress progress = LessonProgress.builder()
+    //             .userId(currentUserId)
+    //             .lessonId(lessonId)
+    //             .isCompleted(true)
+    //             .completedAt(LocalDateTime.now())
+    //             .build();
+            
+    //         progressRepository.save(progress);
+    //     }
+    // }
+
+    
 
     
     

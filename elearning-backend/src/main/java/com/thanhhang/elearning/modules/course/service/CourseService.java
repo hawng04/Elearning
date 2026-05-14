@@ -19,6 +19,7 @@ import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.repository.CategoryRepository;
 import com.thanhhang.elearning.modules.course.repository.CourseRepository;
 import com.thanhhang.elearning.modules.enrollment.repository.EnrollmentRepository;
+import com.thanhhang.elearning.modules.enrollment.repository.LessonProgressRepository;
 
 @Service
 public class CourseService {
@@ -30,6 +31,10 @@ public class CourseService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private LessonProgressRepository progressRepository;
+
 
     public Course createCourse(CourseRequest request) {
         
@@ -207,6 +212,11 @@ public class CourseService {
         return course.getSections().stream()
             .flatMap(section -> section.getLessons().stream())
             .count();
+    }
+
+    public java.util.List<Long> getCompletedLessonIds(Long courseId) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        return progressRepository.findCompletedLessonIds(currentUserId, courseId);
     }
     
 }
