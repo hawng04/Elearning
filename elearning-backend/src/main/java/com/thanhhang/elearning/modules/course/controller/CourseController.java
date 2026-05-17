@@ -9,7 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thanhhang.elearning.common.utils.SecurityUtils;
 import com.thanhhang.elearning.modules.course.dto.request.CourseRequest;
+import com.thanhhang.elearning.modules.course.entity.Course;
 import com.thanhhang.elearning.modules.course.service.CategoryService;
 import com.thanhhang.elearning.modules.course.service.CourseService;
 import com.thanhhang.elearning.modules.course.service.LessonService;
@@ -29,13 +31,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class CourseController {
     @Autowired
     private CourseService courseService;
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private LessonService lessonService;
-    
 
     @GetMapping
     public ResponseEntity<?> getAllCourse() {
@@ -61,7 +56,7 @@ public class CourseController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @PostMapping
     public ResponseEntity<?> createCourse(@RequestBody CourseRequest request) {
         try
@@ -78,7 +73,7 @@ public class CourseController {
     
 
     
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseRequest request) {
         try
@@ -91,7 +86,7 @@ public class CourseController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
         try
@@ -111,4 +106,14 @@ public class CourseController {
     //     List<Long> completedLessonIds = lessonService.getCompletedLessonIds(courseId);
     //     return ResponseEntity.ok(completedLessonIds);
     // }
+
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
+    @GetMapping("/my-teaching-courses")
+    public ResponseEntity<?> getMyTeachingCourses() {
+        try {
+            return ResponseEntity.ok(courseService.getMyTeachingCourses());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi khi lấy danh sách khóa học của giảng viên: " + e.getMessage());
+        }
+    }
 }

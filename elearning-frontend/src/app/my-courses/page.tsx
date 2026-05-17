@@ -93,7 +93,7 @@ export default function MyCoursesPage() {
                     
                     {/* Hiển thị Tên giảng viên nếu có, không thì để trống */}
                     <p className="text-xs text-gray-500 mb-4 line-clamp-1">
-                      {enrollment.course.teacherId ? `ID Giảng viên: ${enrollment.course.teacherId}` : 'Khóa học tiêu chuẩn'}
+                      {enrollment.course.instructorId ? `ID Giảng viên: ${enrollment.course.instructorId}` : 'Khóa học tiêu chuẩn'}
                     </p>
 
                     <div className="mt-auto">

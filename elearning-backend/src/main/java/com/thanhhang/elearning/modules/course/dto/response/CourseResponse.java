@@ -14,7 +14,7 @@ public class CourseResponse {
     private String title;
     private String description;
     private String imageUrl;
-    private Long teacherId;
+    private Long instructorId;
     private Double price;
     private String status;
     private String categoryName;

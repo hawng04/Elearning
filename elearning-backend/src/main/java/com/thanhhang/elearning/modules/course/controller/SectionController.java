@@ -25,7 +25,7 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @PostMapping("")
     public ResponseEntity<?> createSection(Long courseId, SectionRequest request) {
         try
@@ -39,7 +39,7 @@ public class SectionController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateSection(@PathVariable Long id, @RequestBody SectionRequest request) {
         try
@@ -53,7 +53,7 @@ public class SectionController {
         }
     }
 
-     @PreAuthorize("hasRole('ADMIN','TEACHER')")
+     @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @PostMapping("/{id}")
     public ResponseEntity<?> deleteSection(@PathVariable Long id) {
         try
@@ -67,7 +67,7 @@ public class SectionController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getSectionById(@PathVariable Long id) {
         try

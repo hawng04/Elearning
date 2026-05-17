@@ -26,4 +26,30 @@ export const courseService = {
   //   });
   //   return response.data;
   // }
+
+  getMyTeachingCourses: async (): Promise<Course[]> => {
+    const response = await axiosClient.get('/courses/my-teaching-courses');
+    return response.data;
+  },
+
+  createCourse: async (courseData: any) => {
+    const response = await axiosClient.post('/courses', courseData);
+    return response.data;
+  },
+
+  getCourseCurriculum: async (courseId: string | number) => {
+    
+    const response = await axiosClient.get(`/courses/${courseId}`); 
+    return response.data;
+  },
+
+  createSection: async (sectionData: { title: string; courseId: number }) => {
+    const response = await axiosClient.post('/sections', sectionData);
+    return response.data;
+  },
+
+  createLesson: async (lessonData: { title: string; youtubeUrl: string; sectionId: number }) => {
+    const response = await axiosClient.post('/lessons', lessonData);
+    return response.data;
+  },
 };

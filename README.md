@@ -6,7 +6,7 @@ A comprehensive E-learning platform designed with a **Strict Modular Monolith** 
 ## Key Features
 
 * **Identity & Access Management (IAM):** * Robust authentication and authorization using Spring Security and stateless JWT.
-    * Role-based access control (Admin, Teacher, Student).
+    * Role-based access control (Admin, INSTRUCTOR, Student).
 * **Course Management:**
     * Instructors can create courses, sections, and lessons.
     * Strict security gates: Only enrolled students can access course content (videos, documents).

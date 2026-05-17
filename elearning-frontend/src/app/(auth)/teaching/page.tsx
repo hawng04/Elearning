@@ -10,7 +10,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 
 const UDEMY_PURPLE = '#a435f0';
 
-export default function TeacherRegistrationPage() {
+export default function INSTRUCTORRegistrationPage() {
   const router = useRouter();
   const loginFn = useAuthStore((state) => state.login);
   
@@ -49,7 +49,7 @@ export default function TeacherRegistrationPage() {
       const token = response.data?.token || response.data;
       
       if (typeof token === 'string' && token.startsWith('eyJ')) {
-        const user = response.data?.user || { id: 0, email, fullName, role: 'TEACHER' };
+        const user = response.data?.user || { id: 0, email, fullName, role: 'INSTRUCTOR' };
         loginFn(user, token);
         router.push('/'); 
       } else {

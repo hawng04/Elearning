@@ -24,7 +24,7 @@ public class SectionService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !course.getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !course.getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to create section in this course");
         }
 
@@ -43,7 +43,7 @@ public class SectionService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !section.getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to update section in this course");
         }
 
@@ -59,7 +59,7 @@ public class SectionService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !section.getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to delete section in this course");
         }
 

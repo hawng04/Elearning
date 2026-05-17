@@ -3,7 +3,6 @@ package com.thanhhang.elearning.modules.course.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thanhhang.elearning.modules.iam.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,8 +36,8 @@ public class Course {
     private String status; 
 
 
-    @Column(name = "teacher_id", nullable = false)
-    private Long teacherId;
+    @Column(name = "instructor_id", nullable = false)
+    private Long instructorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

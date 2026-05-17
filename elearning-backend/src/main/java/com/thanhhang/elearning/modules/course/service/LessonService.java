@@ -37,7 +37,7 @@ public class LessonService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !section.getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !section.getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to create lesson in this course");
         }
 
@@ -68,7 +68,7 @@ public class LessonService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to update lesson in this course");
         }
 
@@ -103,7 +103,7 @@ public class LessonService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to delete lesson in this course");
         }
 
@@ -116,7 +116,7 @@ public class LessonService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
-        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getTeacherId().equals(currentUserId)) {
+        if (!userRole.equals("ADMIN") && !lesson.getSection().getCourse().getInstructorId().equals(currentUserId)) {
             throw new RuntimeException("Unauthorized to view lesson in this course");
         }
 

@@ -7,7 +7,7 @@ export interface Course {
     imageUrl: string | null;
     price: number;
     status: string;
-    teacherId: number;
+    instructorId: number;
     categoryName: string;
     sections?: Section[];
 

@@ -41,10 +41,10 @@ public class CourseService {
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
 
-        Long finalTeacherId = currentUserId;
+        Long finalinstructorId = currentUserId;
 
-        if (request.getTeacherId() != null && userRole.equals("ADMIN")) {
-            finalTeacherId = request.getTeacherId();
+        if (request.getInstructorId() != null && userRole.equals("ADMIN")) {
+            finalinstructorId = request.getInstructorId();
         }
 
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -55,9 +55,10 @@ public class CourseService {
             .description(request.getDescription())
             .price(request.getPrice())
             .imageUrl(request.getImageUrl())
+            .language(request.getLanguage())
             .status("DRAFT")
             .category(category)
-            .teacherId(finalTeacherId)
+            .instructorId(finalinstructorId)
             .build();
 
         return courseRepository.save(course);
@@ -70,7 +71,7 @@ public class CourseService {
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
 
-        if (!course.getTeacherId().equals(currentUserId) && !userRole.equals("ADMIN")) {
+        if (!course.getInstructorId().equals(currentUserId) && !userRole.equals("ADMIN")) {
             throw new RuntimeException("Bạn không có quyền chỉnh sửa khóa học này");
         }
 
@@ -106,7 +107,7 @@ public class CourseService {
             isEnrolled = enrollmentRepository.existsByCourseIdAndStudentId(courseId, currentUserId);
         }
 
-        boolean hasFullAccess = (currentUserId != null && currentUserId.equals(course.getTeacherId())) 
+        boolean hasFullAccess = (currentUserId != null && currentUserId.equals(course.getInstructorId())) 
                                 || "ADMIN".equals(userRole) 
                                 || isEnrolled;
 
@@ -151,7 +152,7 @@ public class CourseService {
             .title(course.getTitle())
             .description(course.getDescription())
             .imageUrl(course.getImageUrl())
-            .teacherId(course.getTeacherId())
+            .instructorId(course.getInstructorId())
             .price(course.getPrice())
             .status(course.getStatus())
             .categoryName(course.getCategory().getName())
@@ -176,7 +177,7 @@ public class CourseService {
         Long currentUserId = SecurityUtils.getCurrentUserId();
         String userRole = SecurityUtils.getCurrentUserRole();
 
-        if (!course.getTeacherId().equals(currentUserId) && !userRole.equals("ADMIN")) {
+        if (!course.getInstructorId().equals(currentUserId) && !userRole.equals("ADMIN")) {
             throw new RuntimeException("Bạn không có quyền xóa khóa học này");
         }
 
@@ -191,7 +192,7 @@ public class CourseService {
             .title(course.getTitle())
             .description(course.getDescription())
             .imageUrl(course.getImageUrl())
-            .teacherId(course.getTeacherId())
+            .instructorId(course.getInstructorId())
             .price(course.getPrice())
             .status(course.getStatus())
             .categoryName(course.getCategory().getName())
@@ -217,6 +218,28 @@ public class CourseService {
     public java.util.List<Long> getCompletedLessonIds(Long courseId) {
         Long currentUserId = SecurityUtils.getCurrentUserId();
         return progressRepository.findCompletedLessonIds(currentUserId, courseId);
+    }
+
+    public List<CourseResponse> getMyTeachingCourses() {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        
+        List<Course> courses = courseRepository.findByInstructorId(currentUserId);
+        
+        return courses.stream().map(course -> CourseResponse.builder()
+            .id(course.getId())
+            .title(course.getTitle())
+            .description(course.getDescription())
+            .imageUrl(course.getImageUrl())
+            .instructorId(course.getInstructorId())
+            .price(course.getPrice())
+            .status(course.getStatus())
+            .categoryName(course.getCategory() != null ? course.getCategory().getName() : null)
+            .rating(course.getAverageRating() != null ? course.getAverageRating() : 0.0)
+            .totalRatings(course.getTotalRatings() != null ? course.getTotalRatings() : 0)
+            .totalStudents(course.getTotalStudents() != null ? course.getTotalStudents() : 0)
+            .language(course.getLanguage() != null ? course.getLanguage() : "Tiếng Việt")
+            .lastUpdated(course.getLastUpdated() != null ? course.getLastUpdated() : "3/2026")
+            .build()).collect(Collectors.toList());
     }
     
 }

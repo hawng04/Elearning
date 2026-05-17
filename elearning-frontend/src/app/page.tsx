@@ -145,7 +145,7 @@ export default function HomePage() {
                     </h3>
                     
                     <p className="text-xs text-gray-500 mb-1">
-                      Giảng viên ID: {course.teacherId} 
+                      Giảng viên ID: {course.instructorId} 
                     </p>
                     
                     <div className="flex items-center gap-2 mb-2">

@@ -27,7 +27,7 @@ public class LessonController {
     private LessonService lessonService;
 
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @PostMapping("/sections/{sectionId}")
     public ResponseEntity<?> createLesson(@PathVariable Long sectionId, @RequestBody LessonRequest request) {
         try
@@ -40,7 +40,7 @@ public class LessonController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateLesson(@PathVariable Long id, @RequestBody LessonRequest request) {
         try
@@ -54,7 +54,7 @@ public class LessonController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteLesson(@PathVariable Long id) {
         try
@@ -69,7 +69,7 @@ public class LessonController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasRole('ADMIN','INSTRUCTOR')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getLessonById(@PathVariable Long id) {
         try

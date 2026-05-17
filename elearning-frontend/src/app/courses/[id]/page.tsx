@@ -91,7 +91,7 @@ export default function CourseDetailPage() {
           </div>
 
           <div className="text-sm mb-4">
-            Được tạo bởi <span className="text-purple-300 underline cursor-pointer">Giảng viên ID {course.teacherId}</span>
+            Được tạo bởi <span className="text-purple-300 underline cursor-pointer">Giảng viên ID {course.instructorId}</span>
           </div>
 
           <div className="flex items-center gap-4 text-sm text-white">

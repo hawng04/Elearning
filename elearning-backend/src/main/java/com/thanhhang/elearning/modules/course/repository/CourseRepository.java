@@ -9,6 +9,7 @@ import com.thanhhang.elearning.modules.course.entity.Course;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {  
-    List<Course> findByCategoryId(Long categoryId); 
+    List<Course> findByCategoryId(Long categoryId);
+    List<Course> findByInstructorId(Long instructorId);
 
 }

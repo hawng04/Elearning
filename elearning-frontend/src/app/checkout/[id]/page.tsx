@@ -95,7 +95,7 @@ export default function CheckoutPage() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 line-clamp-2">{course.title}</h3>
-                <p className="text-sm text-gray-500">Giảng viên ID: {course.teacherId}</p>
+                <p className="text-sm text-gray-500">Giảng viên ID: {course.instructorId}</p>
               </div>
             </div>
 
